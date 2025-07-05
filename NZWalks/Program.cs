@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using NZWalks.Data;
+using NZWalks.Repository;
 
 namespace NZWalks
 {
@@ -17,7 +18,7 @@ namespace NZWalks
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<NZWalksDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksServer")));
-
+            builder.Services.AddScoped<IRegionRepository, SqlRegionRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -10,6 +10,5 @@
 
         public string? RegionImageURL { get; set; }  
         
-
     }
 }

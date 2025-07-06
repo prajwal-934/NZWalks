@@ -40,10 +40,20 @@ namespace NZWalks.Repository
             return walk;
         }
 
-        public async Task<List<Walk>> GetAllAsync()
+        public async Task<List<Walk>> GetAllAsync(string? filterOn , string? filterQuery)
         {
-            var walks = await _dbContext.Walks.Include(x=>x.Difficulty).Include(x=>x.Region).ToListAsync();
-            return walks;
+            var walks =  _dbContext.Walks.Include(x=>x.Difficulty).Include(x=>x.Region).AsQueryable();
+
+            if(string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                walks = filterOn.ToLower() switch
+                {
+                    "name" => walks.Where(x=>x.Name.Contains(filterQuery)),
+                    "description" => walks.Where(x => x.Description.Contains(filterQuery)),
+                };
+            }
+
+            return await walks.ToListAsync();
         }
 
         public async Task<Walk?> GetByIdAsync(Guid id)

@@ -4,7 +4,7 @@ namespace NZWalks.Repository
 {
     public interface IWalkRepositroy
     {
-        Task<List<Walk>> GetAllAsync();
+        Task<List<Walk>> GetAllAsync(string? filterOn , string? filterQuery);
         Task<Walk?> GetByIdAsync(Guid id);
         Task<Walk> CreateAsync(Walk walk);
         Task<List<Walk>> BulkCreate(List<Walk> walks);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.CustomActionFilters;
 using NZWalks.Models.Domain;
 using NZWalks.Models.DTO;
 using NZWalks.Repository;
@@ -43,6 +44,7 @@ namespace NZWalks.Controllers
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDTO addWalkRequestDTO)
         {
             var walksDomainMaker = _mapper.Map<Walk>(addWalkRequestDTO);
@@ -52,6 +54,7 @@ namespace NZWalks.Controllers
         }
 
         [HttpPost("BulkCreate")]
+        [ValidateModel]
         public async Task<IActionResult> BulkCreate([FromBody] List<AddWalkRequestDTO> addWalkRequestDTOs)
         {
             var walksDomainMaker = _mapper.Map<List<Walk>>(addWalkRequestDTOs);

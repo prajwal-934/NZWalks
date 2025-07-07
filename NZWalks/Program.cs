@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using NZWalks.Repository;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace NZWalks
 {
@@ -30,6 +31,14 @@ namespace NZWalks
             builder.Services.AddScoped<IRegionRepository, SqlRegionRepository>();
             builder.Services.AddScoped<IWalkRepositroy, SqlWalkRepository>();
             builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
+
+            builder.Services.AddIdentityCore<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
+                .AddEntityFrameworkStores<NZWalksAuthDBContext>()
+                .AddDefaultTokenProviders();
+
+
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters

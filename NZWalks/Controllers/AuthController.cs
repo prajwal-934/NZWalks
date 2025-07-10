@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.Models.DTO;
+using NZWalks.Repository;
 
 namespace NZWalks.Controllers
 {
@@ -9,9 +10,12 @@ namespace NZWalks.Controllers
     public class AuthController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
-        public AuthController(UserManager<IdentityUser> userManager)
+        private readonly ITokenRepository tokenRepository;
+
+        public AuthController(UserManager<IdentityUser> userManager ,ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
+            this.tokenRepository = tokenRepository;
         }
 
 
@@ -29,9 +33,9 @@ namespace NZWalks.Controllers
 
             if (identityResult.Succeeded)
             {
-                if(registerRequestDto.Roles != null && registerRequestDto.Roles.Any())
+                if(registerRequestDto.Roles != null && registerRequestDto.Roles.Length != 0)
                 {
-                    identityResult =  await userManager.AddToRoleAsync(identityUser, registerRequestDto.Roles);
+                    identityResult =  await userManager.AddToRolesAsync(identityUser, registerRequestDto.Roles);
 
                     if(identityResult.Succeeded)
                     {
@@ -41,6 +45,41 @@ namespace NZWalks.Controllers
             }
             return BadRequest("Something went wrong");
             
+        }
+
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        {
+            var user = await userManager.FindByEmailAsync(loginRequestDto.Username);
+            
+            if(user != null)
+            {
+                var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+
+                if(checkPasswordResult)
+                {
+                    //Get Roles for the user
+                    var roles = await userManager.GetRolesAsync(user);
+                    if(roles != null)
+                    {
+                        var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+
+                        var response = new LoginResponseDto
+                        {
+                            JwtToken = jwtToken,
+                        };
+                    return Ok(response);
+
+                    }
+
+                    //create token
+                }
+            }
+
+            return BadRequest("Username or password incorrect");
+        
         }
     }
 }

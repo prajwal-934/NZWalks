@@ -24,12 +24,17 @@ namespace NZWalks
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddDbContext<NZWalksDBContext>(options => 
             options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksServer")));
             builder.Services.AddDbContext<NZWalksAuthDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthConnectionString")));
+
+
             builder.Services.AddScoped<IRegionRepository, SqlRegionRepository>();
             builder.Services.AddScoped<IWalkRepositroy, SqlWalkRepository>();
+            builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+
             builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
 
             builder.Services.AddIdentityCore<IdentityUser>()

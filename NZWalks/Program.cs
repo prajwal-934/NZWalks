@@ -10,6 +10,8 @@ using NZWalks.Repository;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography.Xml;
+using Microsoft.Extensions.FileProviders;
+using Serilog;
 
 namespace NZWalks
 {
@@ -20,6 +22,11 @@ namespace NZWalks
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .MinimumLevel.Warning()
+                .CreateLogger();
+
 
             builder.Services.AddControllers();
             builder.Services.AddHttpContextAccessor();
@@ -113,6 +120,12 @@ namespace NZWalks
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+                RequestPath = "/Images"
+            });
 
 
             app.MapControllers();

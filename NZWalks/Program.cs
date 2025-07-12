@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography.Xml;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
+using NZWalks.Middlewares;
 
 namespace NZWalks
 {
@@ -24,6 +25,7 @@ namespace NZWalks
             // Add services to the container.
             var logger = new LoggerConfiguration()
                 .WriteTo.Console()
+                .WriteTo.File("Logs/NzWalks_Log.txt", rollingInterval: RollingInterval.Minute)
                 .MinimumLevel.Warning()
                 .CreateLogger();
 
@@ -115,6 +117,8 @@ namespace NZWalks
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

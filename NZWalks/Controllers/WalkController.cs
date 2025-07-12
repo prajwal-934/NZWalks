@@ -4,6 +4,7 @@ using NZWalks.CustomActionFilters;
 using NZWalks.Models.Domain;
 using NZWalks.Models.DTO;
 using NZWalks.Repository;
+using System.Net;
 
 namespace NZWalks.Controllers
 {
@@ -27,9 +28,12 @@ namespace NZWalks.Controllers
             [FromQuery] string? sortBy , [FromQuery] bool? isAscending, 
             [FromQuery] int pageNumber =1 , [FromQuery] int pageSize = 1000)
         {
-            var walks = await _repository.GetAllAsync(filterOn,filterQuery, sortBy , isAscending ?? true, pageNumber , pageSize);
-            var walksDto = _mapper.Map<List<WalkDTO>>(walks);
-            return Ok(walksDto);           
+           
+                var walks = await _repository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
+                throw new Exception("test Exception");
+                var walksDto = _mapper.Map<List<WalkDTO>>(walks);
+                return Ok(walksDto);
+            
         }
 
 

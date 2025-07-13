@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.CustomActionFilters;
 using NZWalks.Models.Domain;
@@ -11,6 +12,7 @@ namespace NZWalks.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class WalkController : Controller
     {
         private readonly IMapper _mapper;
@@ -30,7 +32,7 @@ namespace NZWalks.Controllers
         {
            
                 var walks = await _repository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
-                throw new Exception("test Exception");
+               
                 var walksDto = _mapper.Map<List<WalkDTO>>(walks);
                 return Ok(walksDto);
             

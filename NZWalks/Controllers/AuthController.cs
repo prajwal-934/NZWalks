@@ -21,31 +21,44 @@ namespace NZWalks.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto  registerRequestDto)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
         {
+            var existingUser = await userManager.FindByEmailAsync(registerRequestDto.Username);
+            if (existingUser != null)
+            {
+                return BadRequest(new { error = "User already exists." });
+            }
+
             var identityUser = new IdentityUser
             {
                 UserName = registerRequestDto.Username,
                 Email = registerRequestDto.Username
             };
 
-            var identityResult =  await userManager.CreateAsync(identityUser , registerRequestDto.Password);
+            var identityResult = await userManager.CreateAsync(identityUser, registerRequestDto.Password);
 
             if (identityResult.Succeeded)
             {
-                if(registerRequestDto.Roles != null && registerRequestDto.Roles.Length != 0)
+                if (registerRequestDto.Roles != null && registerRequestDto.Roles.Length != 0)
                 {
-                    identityResult =  await userManager.AddToRolesAsync(identityUser, registerRequestDto.Roles);
+                    identityResult = await userManager.AddToRolesAsync(identityUser, registerRequestDto.Roles);
 
-                    if(identityResult.Succeeded)
+                    if (identityResult.Succeeded)
                     {
-                        return Ok("User was registered! please login");
+                        return Ok(new { message = "User was registered! Please login." });
+                    }
+                    else
+                    {
+                        return BadRequest(new { error = "Failed to assign roles." });
                     }
                 }
+
+                return Ok(new { message = "User was registered! Please login." });
             }
-            return BadRequest("Something went wrong");
-            
+
+            return BadRequest(new { error = "User registration failed.", details = identityResult.Errors });
         }
+
 
 
         [HttpPost]
@@ -53,33 +66,28 @@ namespace NZWalks.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
             var user = await userManager.FindByEmailAsync(loginRequestDto.Username);
-            
-            if(user != null)
+
+            if (user != null)
             {
                 var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
-                if(checkPasswordResult)
+                if (checkPasswordResult)
                 {
-                    //Get Roles for the user
                     var roles = await userManager.GetRolesAsync(user);
-                    if(roles != null)
+
+                    var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+
+                    var response = new LoginResponseDto
                     {
-                        var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+                        JwtToken = jwtToken,
+                    };
 
-                        var response = new LoginResponseDto
-                        {
-                            JwtToken = jwtToken,
-                        };
                     return Ok(response);
-
-                    }
-
-                    //create token
                 }
             }
 
-            return BadRequest("Username or password incorrect");
-        
+            return BadRequest(new { error = "Username or password is incorrect." });
         }
+
     }
 }

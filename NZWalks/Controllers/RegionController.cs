@@ -31,13 +31,13 @@ namespace NZWalks.Controllers
         } 
 
         [HttpGet]
-        [Authorize(Roles ="Reader")]
+        [Authorize(Roles = "Reader, Writer")]
 
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                throw new Exception("This is a custom exception");
+                //throw new Exception("This is a custom exception");
 
                 logger.LogInformation("Get ALL Action Method was invoked");
                 logger.LogWarning("This is warning log");
@@ -59,7 +59,7 @@ namespace NZWalks.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Reader")]
+        [Authorize(Roles = "Reader , Writer")]
 
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
@@ -71,7 +71,7 @@ namespace NZWalks.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Writer")]
+        [Authorize(Roles = "Reader, Writer")]
 
         public async  Task<IActionResult> Create([FromBody] AddRegionRequestDTO addRegionRequestDTO)
         {
@@ -85,7 +85,7 @@ namespace NZWalks.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        [Authorize(Roles = "Writer")]
+        [Authorize(Roles = "Reader , Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id , [FromQuery] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
 

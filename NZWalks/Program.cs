@@ -29,6 +29,17 @@ namespace NZWalks
                 .MinimumLevel.Warning()
                 .CreateLogger();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5173")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
 
             builder.Services.AddControllers();
             builder.Services.AddHttpContextAccessor();
@@ -119,7 +130,7 @@ namespace NZWalks
             }
 
             app.UseMiddleware<ExceptionHandlerMiddleware>();
-
+            app.UseCors("AllowFrontend");
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

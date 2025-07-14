@@ -1,32 +1,75 @@
 import React from 'react';
-import { Stack, Text, DefaultButton } from '@fluentui/react';
-import { useAuth } from '../context/AuthContext';
+import { Stack, Text } from '@fluentui/react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 
 const Home: React.FC = () => {
-  const { logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const cardStyles = {
+    root: {
+      width: 200,
+      padding: 20,
+      borderRadius: 8,
+      background: '#0078d4', // Azure blue
+      color: 'white',
+      cursor: 'pointer',
+      boxShadow: '0 0 8px rgba(0,0,0,0.15)',
+      transition: 'transform 0.2s, box-shadow 0.2s',
+    },
+    rootHover: {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+    },
   };
 
   return (
     <>
-    <Header/>
-    <Stack
-      horizontalAlign="center"
-      verticalAlign="center"
-      verticalFill
-      tokens={{ childrenGap: 20 }}
-      styles={{ root: { height: '100vh', background: '#f3f2f1' } }}
-    >
-      <Text variant="xxLarge">Welcome to the Walks & Trails App</Text>
-      <Text variant="mediumPlus">This is your Home page. Content will appear here soon.</Text>
-      <DefaultButton text="Logout" onClick={handleLogout} />
-    </Stack>
+      <Header />
+      <Stack
+        horizontalAlign="center"
+        verticalAlign="start"
+        tokens={{ childrenGap: 40 }}
+        styles={{ root: { height: '100vh', background: '#f3f2f1', paddingTop: 60 } }}
+      >
+        <Text variant="xxLarge">Welcome to the Walks & Trails App</Text>
+
+        <Stack horizontal tokens={{ childrenGap: 40 }}>
+          <Stack
+            styles={{
+              root: {
+                ...cardStyles.root,
+              },
+            }}
+            onClick={() => navigate('/region')}
+            onMouseEnter={(e) =>
+              Object.assign(e.currentTarget.style, cardStyles.rootHover)
+            }
+            onMouseLeave={(e) =>
+              Object.assign(e.currentTarget.style, cardStyles.root)
+            }
+          >
+            <Text styles={{ root: { color: 'white' } }} variant="large">Region API</Text>
+          </Stack>
+
+          <Stack
+            styles={{
+              root: {
+                ...cardStyles.root,
+              },
+            }}
+            onClick={() => navigate('/walks')}
+            onMouseEnter={(e) =>
+              Object.assign(e.currentTarget.style, cardStyles.rootHover)
+            }
+            onMouseLeave={(e) =>
+              Object.assign(e.currentTarget.style, cardStyles.root)
+            }
+          >
+            <Text styles={{ root: { color: 'white' } }} variant="large">Walks API</Text>
+          </Stack>
+        </Stack>
+      </Stack>
     </>
   );
 };

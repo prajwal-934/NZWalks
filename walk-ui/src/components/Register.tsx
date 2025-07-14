@@ -3,11 +3,12 @@ import {
   TextField,
   PrimaryButton,
   Stack,
-  Dropdown
+  Dropdown,
+  Link as FluentLink
 } from '@fluentui/react';
 import type { IDropdownOption, IDropdownStyles } from '@fluentui/react';
 import { registerUser } from '../api/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Header from './Header';
 
 interface RegisterForm {
@@ -19,7 +20,6 @@ interface RegisterForm {
 const roleOptions: IDropdownOption[] = [
   { key: 'Reader', text: 'Reader' },
   { key: 'Writer', text: 'Writer' },
-
 ];
 
 const dropdownStyles: Partial<IDropdownStyles> = {
@@ -44,8 +44,7 @@ const Register: React.FC = () => {
 
   const handleRoleChange = (
     _event: React.FormEvent<HTMLDivElement>,
-    option?: IDropdownOption,
-    index?: number
+    option?: IDropdownOption
   ) => {
     const newRoles = form.roles.includes(option!.key as string)
       ? form.roles.filter((r) => r !== option!.key)
@@ -60,31 +59,34 @@ const Register: React.FC = () => {
       navigate('/login');
     } catch (error) {
       alert('Registration failed');
-      console.log(error);
+      console.error(error);
     }
   };
 
   return (
     <>
-    <Header/>
-    <Stack
-      tokens={{ childrenGap: 15 }}
-      styles={{ root: { width: 320, margin: 'auto', paddingTop: 80 } }}
-    >
-      <h2>Register</h2>
-      <TextField label="Username (Email)" name="username" onChange={handleChange} />
-      <TextField label="Password" name="password" type="password" onChange={handleChange} />
-      <Dropdown
-        label="Roles"
-        placeholder="Select roles"
-        multiSelect
-        options={roleOptions}
-        selectedKeys={form.roles}
-        onChange={handleRoleChange}
-        styles={dropdownStyles}
-      />
-      <PrimaryButton text="Register" onClick={handleSubmit} />
-    </Stack>
+      <Header />
+      <Stack
+        tokens={{ childrenGap: 15 }}
+        styles={{ root: { width: 320, margin: 'auto', paddingTop: 80 } }}
+      >
+        <h2>Register</h2>
+        <TextField label="Username (Email)" name="username" onChange={handleChange} />
+        <TextField label="Password" name="password" type="password" onChange={handleChange} />
+        <Dropdown
+          label="Roles"
+          placeholder="Select roles"
+          multiSelect
+          options={roleOptions}
+          selectedKeys={form.roles}
+          onChange={handleRoleChange}
+          styles={dropdownStyles}
+        />
+        <PrimaryButton text="Register" onClick={handleSubmit} />
+        <FluentLink as={Link} to="/login">
+          Already have an account? Login here
+        </FluentLink>
+      </Stack>
     </>
   );
 };

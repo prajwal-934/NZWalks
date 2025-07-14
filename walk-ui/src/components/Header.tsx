@@ -42,7 +42,7 @@ const Header: React.FC = () => {
           },
         }}
       >
-        <Text variant="xLarge" styles={{ root: { color: 'white' } }}>
+        <Text onClick={() => navigate('/home')} variant="xLarge" styles={{ root: { color: 'white' } }}>
           Walks and Trail
         </Text>
 

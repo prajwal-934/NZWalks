@@ -35,7 +35,7 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Header />
+   
       <Stack
         tokens={{ childrenGap: 15 }}
         styles={{ root: { width: 300, margin: 'auto', paddingTop: 100 } }}

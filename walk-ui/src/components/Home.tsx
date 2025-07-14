@@ -25,14 +25,14 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Header />
+      
       <Stack
         horizontalAlign="center"
         verticalAlign="start"
         tokens={{ childrenGap: 40 }}
         styles={{ root: { height: '100vh', background: '#f3f2f1', paddingTop: 60 } }}
       >
-        <Text variant="xxLarge">Welcome to the Walks & Trails App</Text>
+        <Text  variant="xxLarge">Welcome to the Walks & Trails App</Text>
 
         <Stack horizontal tokens={{ childrenGap: 40 }}>
           <Stack

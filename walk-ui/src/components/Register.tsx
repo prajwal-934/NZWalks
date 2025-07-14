@@ -65,7 +65,7 @@ const Register: React.FC = () => {
 
   return (
     <>
-      <Header />
+  
       <Stack
         tokens={{ childrenGap: 15 }}
         styles={{ root: { width: 320, margin: 'auto', paddingTop: 80 } }}

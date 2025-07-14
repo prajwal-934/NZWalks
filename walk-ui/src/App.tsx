@@ -7,7 +7,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import { azureTheme } from './theme';
-import Region from './components/Region';
+import Region from './components/region/Region'; 
+import Layout from './components/Layout';
 import Walks from './components/Walks';
 
 // Initialize Fluent UI icons
@@ -24,16 +25,19 @@ const App = () => {
     <AuthProvider>
       <ThemeProvider theme={azureTheme}>
         <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-            <Route path="*" element={<Navigate to="/home" />} />
-            <Route path="/region" element={<Region />} />
-            <Route path="/walks" element={<Walks />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-          </Routes>
-        </Router>
+        {/* Protected Routes with Header */}
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/region" element={<Region />} />
+          <Route path="/walks" element={<Walks />} />
+        </Route>
+      </Routes>
+    </Router>
       </ThemeProvider>
     </AuthProvider>
   );

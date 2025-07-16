@@ -9,7 +9,7 @@ import Home from './components/Home';
 import { azureTheme } from './theme';
 import Region from './components/region/Region'; 
 import Layout from './components/Layout';
-import Walks from './components/Walks';
+import Walk from './components/walk/Walk';
 
 // Initialize Fluent UI icons
 initializeIcons();
@@ -25,19 +25,43 @@ const App = () => {
     <AuthProvider>
       <ThemeProvider theme={azureTheme}>
         <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes with Header */}
-        <Route element={<Layout />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/region" element={<Region />} />
-          <Route path="/walks" element={<Walks />} />
-        </Route>
-      </Routes>
-    </Router>
+            {/* Protected Routes with Layout */}
+            <Route element={<Layout />}>
+              <Route
+                path="/home"
+                element={
+                  <PrivateRoute>
+                    <Home />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/region"
+                element={
+                  <PrivateRoute>
+                    <Region />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/walks"
+                element={
+                  <PrivateRoute>
+                    <Walk/>
+                  </PrivateRoute>
+                }
+              />
+            </Route>
+
+            {/* Redirect unknown routes */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Router>
       </ThemeProvider>
     </AuthProvider>
   );

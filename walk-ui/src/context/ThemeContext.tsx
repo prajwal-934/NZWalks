@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { FluentProvider, makeStyles, webDarkTheme ,webLightTheme} from "@fluentui/react-components";
+import type {ReactNode} from 'react'
 
 interface ThemeContextPropType {
     children: ReactNode;

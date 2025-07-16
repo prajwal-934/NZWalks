@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, PrimaryButton, Stack, Link as FluentLink } from '@fluentui/react';
-import { loginUser } from '../api/api';
+import { loginUser } from '../api/AuthApi';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from './Header';

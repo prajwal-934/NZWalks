@@ -5,11 +5,10 @@ import {
   createRegion,
   updateRegionById,
   deleteRegionById,
-} from '../api/api';
+} from '../api/RegionApi';
 
 export const useRegions = () => {
   const [regions, setRegions] = useState<IRegion[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<IRegion | null>(null);
 
   const fetchRegions = async () => {
     try {
@@ -27,7 +26,7 @@ export const useRegions = () => {
   const addRegion = async (region: IRegion) => {
     try {
       await createRegion(region);
-      await fetchRegions();
+      setRegions((prev)=> [...prev, region]);
     } catch (error) {
       console.error('Failed to add region:', error);
     }
@@ -36,7 +35,9 @@ export const useRegions = () => {
   const updateRegion = async (region: IRegion) => {
     try {
       await updateRegionById(region);
-      await fetchRegions();
+      const updatedRegion = regions.map((reg)=> reg.id===region.id ? region : reg);
+      setRegions(updatedRegion);
+      
     } catch (error) {
       console.error('Failed to update region:', error);
     }
@@ -45,7 +46,8 @@ export const useRegions = () => {
   const deleteRegion = async (id: string) => {
     try {
       await deleteRegionById(id);
-      await fetchRegions();
+      const updatedRegion = regions.filter((reg)=> reg.id!= id);
+      setRegions(updatedRegion);
     } catch (error) {
       console.error('Failed to delete region:', error);
     }
@@ -53,8 +55,6 @@ export const useRegions = () => {
 
   return {
     regions,
-    selectedRegion,
-    setSelectedRegion,
     fetchRegions,
     addRegion,
     updateRegion,

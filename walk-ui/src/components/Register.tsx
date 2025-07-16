@@ -7,7 +7,7 @@ import {
   Link as FluentLink
 } from '@fluentui/react';
 import type { IDropdownOption, IDropdownStyles } from '@fluentui/react';
-import { registerUser } from '../api/api';
+import { registerUser } from '../api/AuthApi';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from './Header';
 

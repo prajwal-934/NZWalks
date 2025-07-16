@@ -21,8 +21,6 @@ import { useAuth } from '../../context/AuthContext';
 const Region: React.FC = () => {
   const {
     regions,
-    selectedRegion,
-    setSelectedRegion,
     addRegion,
     updateRegion,
     deleteRegion,
@@ -31,6 +29,10 @@ const Region: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<IRegion | null>(null);
+
+
+
 
   const handleEdit = (region: IRegion) => {
     setSelectedRegion(region);
@@ -43,7 +45,7 @@ const Region: React.FC = () => {
   };
 
   const handleAddNew = () => {
-    setSelectedRegion({ id: '', code: '', name: '', regionImageUrl: '' });
+    setSelectedRegion({ id: '', code: '', name: '', regionImageURL: '' });
     setIsModalOpen(true);
   };
 
@@ -70,25 +72,48 @@ const Region: React.FC = () => {
     setIsDeleteDialogOpen(false);
   };
 
-  const columns: IColumn[] = [
-    { key: 'code', name: 'Code', fieldName: 'code', minWidth: 70 },
-    { key: 'name', name: 'Name', fieldName: 'name', minWidth: 100 },
-    { key: 'image', name: 'Image URL', fieldName: 'regionImageUrl', minWidth: 200 },
-    {
-      key: 'actions',
-      name: 'Actions',
-      minWidth: 100,
-      onRender: (item: IRegion) => (
-        <Stack horizontal tokens={{ childrenGap: 10 }}>
-          <IconButton iconProps={{ iconName: 'Edit' }} title="Edit" onClick={() => handleEdit(item)} />
-          <IconButton iconProps={{ iconName: 'Delete' }} title="Delete" onClick={() => handleDelete(item.id)} />
-        </Stack>
-      ),
-    },
-  ];
+const columns: IColumn[] = [
+  {
+    key: 'code',
+    name: 'Code',
+    fieldName: 'code',
+    minWidth: 150,
+    maxWidth: 150,
+    isResizable: true,
+  },
+  {
+    key: 'name',
+    name: 'Name',
+    fieldName: 'name',
+    minWidth: 150,
+    maxWidth: 150,
+    isResizable: true,
+  },
+  {
+    key: 'image',
+    name: 'Image URL',
+    fieldName: 'regionImageURL',
+    minWidth: 150,
+    maxWidth: 150,
+    isResizable: true,
+  },
+  {
+    key: 'actions',
+    name: 'Actions',
+    minWidth: 150,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: IRegion) => (
+      <Stack horizontal tokens={{ childrenGap: 10 }}>
+        <IconButton iconProps={{ iconName: 'Edit' }} title="Edit" onClick={() => handleEdit(item)} />
+        <IconButton iconProps={{ iconName: 'Delete' }} title="Delete" onClick={() => handleDelete(item.id)} />
+      </Stack>
+    ),
+  },
+];
 
- var {token} =  useAuth();
-  console.log(token)
+
+
   return (
     <Stack tokens={{ childrenGap: 20 }} styles={{ root: { padding: 24 } }}>
       <Text variant="xxLarge">Region API</Text>
@@ -116,8 +141,8 @@ const Region: React.FC = () => {
             />
             <TextField
               label="Image URL"
-              value={selectedRegion?.regionImageUrl || ''}
-              onChange={(_, v) => setSelectedRegion((prev) => ({ ...prev!, regionImageUrl: v || '' }))}
+              value={selectedRegion?.regionImageURL || ''}
+              onChange={(_, v) => setSelectedRegion((prev) => ({ ...prev!, regionImageURL: v || '' }))}
             />
             <Stack horizontal tokens={{ childrenGap: 10 }}>
               <PrimaryButton text="Save" onClick={handleSave} />
